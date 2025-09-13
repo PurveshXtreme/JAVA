@@ -1,4 +1,5 @@
-![java]([https://media.geeksforgeeks.org/wp-content/uploads/20240401182730/JVM-768.png](https://media.geeksforgeeks.org/wp-content/uploads/20240401182630/Features-of-Java-768.png))
+![Java Features](https://media.geeksforgeeks.org/wp-content/uploads/20240401182630/Features-of-Java-768.png)
+
 
 ---
 # 📑 Table of Contents for Java Interview Questions
