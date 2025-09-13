@@ -147,27 +147,50 @@ String str1 = "Hello";
 
 ---
 
-## 47. What are the differences between String and StringBuffer?
+## Comparison: String vs StringBuffer vs StringBuilder
 
-| Feature            | String                                      | StringBuffer |
-|--------------------|---------------------------------------------|--------------|
-| Nature             | Immutable (cannot be changed)               | Mutable (modifiable) |
-| Thread-safety      | Not thread-safe                             | Thread-safe (synchronized methods) |
-| Usage              | Suitable for fixed data                     | Suitable for frequent modifications |
-
----
-
-## 48. What are the differences between StringBuffer and StringBuilder?
-
-| Feature            | StringBuffer                                | StringBuilder |
-|--------------------|---------------------------------------------|---------------|
-| Nature             | Mutable string                              | Mutable string |
-| Thread-safety      | Thread-safe (synchronized)                  | Not thread-safe |
-| Performance        | Slower (because of synchronization)         | Faster (no synchronization overhead) |
-| Use-case           | Use in multithreaded environments           | Use in single-threaded performance-critical cases |
+| Feature          | String                                        | StringBuffer                                   | StringBuilder                                   |
+|------------------|-----------------------------------------------|------------------------------------------------|-------------------------------------------------|
+| Nature           | Immutable (cannot be changed after creation)  | Mutable (contents can be changed)              | Mutable (contents can be changed)               |
+| Storage Location | String Pool (for literals), Heap (for new)    | Heap                                           | Heap                                            |
+| Thread-safety    | Not thread-safe                               | Thread-safe (methods synchronized)             | Not thread-safe                                 |
+| Performance      | Fast for fixed data (no modification)         | Slower due to synchronization                  | Faster (no synchronization overhead)            |
+| Use-case         | Constant/fixed string values                  | Frequent modifications in multi-threaded code  | Frequent modifications in single-threaded code  |
+| Memory Usage     | May create many objects if modified often     | Efficient for modifications (single object)    | Efficient for modifications (single object)     |
+| Methods          | Many (concat, substring, etc.)                | append, insert, delete, reverse, etc.          | append, insert, delete, reverse, etc.           |
+| Example          | `String s = "Hello";`                         | `StringBuffer sb = new StringBuffer("Hello");` | `StringBuilder sb = new StringBuilder("Hello");`|
+| Modification     | Creates new object on modification            | Modifies current object                        | Modifies current object                         |
 
 ---
 
+## Thread safety means that the methods of a class are designed so that multiple threads can access and modify an object concurrently without causing problems (like data corruption, unexpected results, or crashes).
+---
+
+
+### Example Code
+
+**String Example (Immutable)**
+```java
+String str = "Hello";
+str = str + " World"; // Creates a new String object
+System.out.println(str); // Output: Hello World
+```
+
+**StringBuffer Example (Mutable & Thread-safe)**
+```java
+StringBuffer sb = new StringBuffer("Hello");
+sb.append(" World"); // Modifies the same object
+System.out.println(sb); // Output: Hello World
+```
+
+**StringBuilder Example (Mutable & NOT Thread-safe)**
+```java
+StringBuilder sb = new StringBuilder("Hello");
+sb.append(" World"); // Modifies the same object
+System.out.println(sb); // Output: Hello World
+```
+
+---
 ## 49. Which among StringBuilder or StringBuffer should be preferred when there are a lot of updates?
 
 - **String** is immutable → inefficient for frequent updates.  
