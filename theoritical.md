@@ -126,3 +126,93 @@ It dynamically loads `.class` files into memory whenever required.
 
 ### String Handling
 
+## 10. What is Java String Pool?
+
+The **Java String Pool** is a special memory area inside the **heap** where Java stores string literals.  
+- When a new string is created, JVM first checks the pool.  
+- If it exists, the same reference is reused.  
+- If not, a new object is created in the pool.  
+
+This mechanism saves memory and improves performance.
+
+**Example:**
+\`\`\`java
+String str1 = "Hello";  
+// "Hello" will be stored in the String Pool  
+// str1 will point to the pool reference
+\`\`\`
+
+**Image:**  
+![Java String Pool](https://media.geeksforgeeks.org/wp-content/uploads/20240402092413/Java-String-Pool-768.png)
+
+---
+
+## 47. What are the differences between String and StringBuffer?
+
+| Feature            | String                                      | StringBuffer |
+|--------------------|---------------------------------------------|--------------|
+| Nature             | Immutable (cannot be changed)               | Mutable (modifiable) |
+| Thread-safety      | Not thread-safe                             | Thread-safe (synchronized methods) |
+| Usage              | Suitable for fixed data                     | Suitable for frequent modifications |
+
+---
+
+## 48. What are the differences between StringBuffer and StringBuilder?
+
+| Feature            | StringBuffer                                | StringBuilder |
+|--------------------|---------------------------------------------|---------------|
+| Nature             | Mutable string                              | Mutable string |
+| Thread-safety      | Thread-safe (synchronized)                  | Not thread-safe |
+| Performance        | Slower (because of synchronization)         | Faster (no synchronization overhead) |
+| Use-case           | Use in multithreaded environments           | Use in single-threaded performance-critical cases |
+
+---
+
+## 49. Which among StringBuilder or StringBuffer should be preferred when there are a lot of updates?
+
+- **String** is immutable → inefficient for frequent updates.  
+- Use **StringBuffer** if **thread-safety** is required.  
+- Use **StringBuilder** if **performance** is a priority in a **single-threaded** environment.  
+
+---
+
+## 50. Why is StringBuffer called mutable?
+
+The **StringBuffer** class represents a changeable sequence of characters.  
+Unlike **String**, it allows modification without creating new objects, making it **mutable**.
+
+**Example:**
+\`\`\`java
+// Java Program to demonstrate StringBuffer mutability
+public class StringBufferExample {
+    public static void main(String[] args) {
+        StringBuffer s = new StringBuffer();
+        s.append("Geeks");
+        s.append("for");
+        s.append("Geeks");
+        String message = s.toString();
+        System.out.println(message);
+    }
+}
+\`\`\`
+---
+
+## 51. How is the creation of a String using `new()` different from that of a literal?
+
+- **String literal**: Stored in the **String Pool**. Reused if the same string exists.  
+- **String using `new()`**: Always creates a new object in **heap memory**, even if the same content already exists in the pool.  
+
+**Syntax:**
+\`\`\`java
+String x = new String("ABC"); // stored in heap, not reused from pool
+\`\`\`
+
+**Image:**  
+![String new() vs literal](https://media.geeksforgeeks.org/wp-content/uploads/20240402093121/3-768.png)
+
+
+---
+---
+
+
+
