@@ -136,11 +136,11 @@ The **Java String Pool** is a special memory area inside the **heap** where Java
 This mechanism saves memory and improves performance.
 
 **Example:**
-\`\`\`java
+```java
 String str1 = "Hello";  
 // "Hello" will be stored in the String Pool  
 // str1 will point to the pool reference
-\`\`\`
+```
 
 **Image:**  
 ![Java String Pool](https://media.geeksforgeeks.org/wp-content/uploads/20240402092413/Java-String-Pool-768.png)
@@ -182,7 +182,7 @@ The **StringBuffer** class represents a changeable sequence of characters.
 Unlike **String**, it allows modification without creating new objects, making it **mutable**.
 
 **Example:**
-\`\`\`java
+```java
 // Java Program to demonstrate StringBuffer mutability
 public class StringBufferExample {
     public static void main(String[] args) {
@@ -194,7 +194,7 @@ public class StringBufferExample {
         System.out.println(message);
     }
 }
-\`\`\`
+```
 ---
 
 ## 51. How is the creation of a String using `new()` different from that of a literal?
@@ -203,9 +203,9 @@ public class StringBufferExample {
 - **String using `new()`**: Always creates a new object in **heap memory**, even if the same content already exists in the pool.  
 
 **Syntax:**
-\`\`\`java
+```java
 String x = new String("ABC"); // stored in heap, not reused from pool
-\`\`\`
+```
 
 **Image:**  
 ![String new() vs literal](https://media.geeksforgeeks.org/wp-content/uploads/20240402093121/3-768.png)
