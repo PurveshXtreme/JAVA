@@ -237,6 +237,8 @@ String x = new String("ABC"); // stored in heap, not reused from pool
 ---
 ---
 
+### OOP Concepts
+
 ## 61. What is an Object-Oriented Paradigm?
 
 A **paradigm** is a pattern or a method. Programming paradigms are approaches to solving problems and include:
