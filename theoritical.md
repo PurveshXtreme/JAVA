@@ -237,5 +237,202 @@ String x = new String("ABC"); // stored in heap, not reused from pool
 ---
 ---
 
+## 61. What is an Object-Oriented Paradigm?
 
+A **paradigm** is a pattern or a method. Programming paradigms are approaches to solving problems and include:
+- Imperative
+- Logical
+- Functional
+- Object-Oriented
+
+**Object-oriented paradigm** uses objects as base entities. Methods are applied on these objects, and concepts like encapsulation and inheritance are performed.  
+> When programming revolves around objects and their interactions, it's called the object-oriented paradigm.
+
+---
+
+## 62. What are the Main Concepts of OOPs in Java?
+
+- **Inheritance**
+- **Polymorphism**
+- **Abstraction**
+- **Encapsulation**
+
+---
+
+## 63. Difference between Object-Oriented and Object-Based Programming Languages
+
+| Object-Oriented Programming Language            | Object-Based Programming Language                   |
+|------------------------------------------------|----------------------------------------------------|
+| Covers concepts like inheritance, polymorphism, abstraction | Limited to objects and encapsulation              |
+| Supports all built-in objects                  | Doesn't support all built-in objects                |
+| Examples: Java, C#                             | Examples: JavaScript, Visual Basic                  |
+
+---
+
+## 70. What is an Object?
+
+An **object** is a real-life entity with properties and methods.  
+- It's an instance of a class.
+- Declared using the `new` keyword.
+
+---
+
+## 74. What is a Constructor?
+
+A **constructor** is a special method used to initialize objects.  
+- Called when an object is created.
+- The constructor's name is the same as the class.
+
+**Example:**
+```java
+// Class Created
+class XYZ {
+    private int val;
+
+    // Constructor
+    XYZ(){
+        val = 0;
+    }
+}
+```
+
+---
+
+## 75. What Happens If You Don't Provide a Constructor in a Class?
+
+If no constructor is provided, Java compiler **automatically generates a default constructor** with no arguments and no operation.
+
+---
+
+## 76. Types of Constructors in Java
+
+1. **Default Constructor**:  
+   Does not accept any parameters.  
+   Used to set initial values for object attributes.  
+   ```java
+   class_Name();
+   // Default constructor called
+   ```
+
+2. **Parameterized Constructor**:  
+   Accepts parameters as arguments to assign values during initialization.  
+   ```java
+   class_Name(parameter1, parameter2, ...);
+   // Values assigned to instance variables
+   ```
+
+---
+
+## 77. Purpose of a Default Constructor
+
+Constructors create instances of a class (objects).  
+A **default constructor** does not accept parameters, so whatever values are assigned to object properties are considered default values.
+
+---
+
+## 78. What is a Copy Constructor in Java?
+
+A **copy constructor** passes another object as a parameter so the properties of both objects are the same.  
+> It creates a copy of an object using another object.
+
+---
+
+## 79. Where and How Can You Use a Private Constructor?
+
+A **private constructor** prevents other classes from instantiating the object or subclassing.  
+Commonly used in the **Singleton pattern**.
+
+**Example:**
+```java
+// Java program to demonstrate Singleton pattern with private constructor
+class GFG {
+    static GFG instance = null;
+    public int x = 10;
+
+    // Private constructor can't be accessed outside the class
+    private GFG() {}
+
+    // Factory method to provide instances
+    static public GFG getInstance() {
+        if (instance == null)
+            instance = new GFG();
+        return instance;
+    }
+}
+// Driver Class
+class Main {
+    public static void main(String args[]) {
+        GFG a = GFG.getInstance();
+        GFG b = GFG.getInstance();
+        a.x = a.x + 10;
+        System.out.println("Value of a.x = " + a.x);
+        System.out.println("Value of b.x = " + b.x);
+    }
+}
+```
+**Output:**
+```
+Value of a.x = 20
+Value of b.x = 20
+```
+
+---
+
+## 80. Differences Between Constructors and Methods
+
+| Constructors                                    | Methods                                     |
+|-------------------------------------------------|---------------------------------------------|
+| Called only when object is created              | Can be called multiple times                |
+| No return type                                  | Has a return type (void or another type)    |
+| Used to set up initial state                    | Used to perform specific actions            |
+
+---
+
+## 81. What is an Interface?
+
+An **interface** in Java is a collection of static final variables and abstract methods that define a contract for classes.  
+- Any class that implements an interface must implement its methods.
+- Specifies **what** a class should do, not **how**.
+
+**Syntax:**
+```java
+interface InterfaceName {
+    // constant fields
+    // methods (abstract by default)
+}
+```
+
+**Example:**
+```java
+// Java Program to demonstrate Interface
+interface Shape {
+    double getArea();
+    double getPerimeter();
+}
+class Circle implements Shape {
+    private double radius;
+    public Circle(double radius) { this.radius = radius; }
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+    public double getPerimeter() {
+        return 2 * Math.PI * radius;
+    }
+}
+class GFG {
+    public static void main(String[] args) {
+        Circle circle = new Circle(5.0);
+        System.out.println("Area of circle is " + circle.getArea());
+        System.out.println("Perimeter of circle is " + circle.getPerimeter());
+    }
+}
+```
+**Output:**
+```
+Area of circle is 78.53981633974483
+Perimeter of circle is 31.41592653589793
+```
+
+---
+---
 
