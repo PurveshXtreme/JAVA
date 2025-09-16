@@ -434,7 +434,70 @@ class GFG {
 Area of circle is 78.53981633974483
 Perimeter of circle is 31.41592653589793
 ```
-
----
 ---
 
+# OOPs Java Concepts – Notes
+
+## 81. What is an Interface?
+
+An **interface** in Java is a collection of static final variables and abstract methods that define the contract or agreement for a set of linked classes. Any class that implements an interface is required to implement a specific set of methods. It specifies the behavior that a class must exhibit but not the specifics of how it should be implemented.
+
+**Syntax:**
+```java
+interface InterfaceName {
+    // constant fields
+    // methods that are abstract by default
+}
+```
+
+---
+
+## 84. Differences Between Abstract Class and Interface
+
+| Abstract Class                                   | Interface                                      |
+|--------------------------------------------------|------------------------------------------------|
+| Both abstract and non-abstract methods may be found in an abstract class. | The interface contains only abstract methods (Java 7 and below; Java 8+ supports default/static methods). |
+| Abstract Class supports final methods.           | The interface class does not support final methods. |
+| Multiple inheritance is not supported by the abstract class. | Multiple inheritance is supported by interface class. |
+| `abstract` keyword is used to declare an abstract class. | `interface` keyword is used to declare the interface class. |
+| `extends` keyword is used to extend an abstract class. | `implements` keyword is used to implement the interface. |
+| Abstract class can have members like `protected`, `private`, etc. | All interface members are `public` by default. |
+
+---
+
+## 89. What is the ‘IS-A’ Relationship in OOPs Java?
+
+- ‘**IS-A**’ is a type of relationship where one class inherits from another class.  
+- It represents inheritance.  
+- Example: `Dog IS-A Animal` (Dog extends Animal).
+- This relationship allows a subclass to be treated as an instance of its superclass.
+
+**Other OOPs Relationships:**
+- **HAS-A (Composition/Aggregation):** One class contains a reference to another class.  
+  Example: `Car HAS-A Engine`.
+- **Uses-A:** When a class uses another class for some operation, usually as a method parameter.
+
+---
+
+## 107. Can We Overload the main() Method?
+
+Yes, in Java we can overload the `main()` method.  
+- The JVM always calls the signature `public static void main(String[] args)` to start execution.
+- However, you can define other `main()` methods with different parameter lists in the same class.
+- These overloaded methods can be called from the standard main method.
+
+**Example:**
+```java
+public class MainOverload {
+    public static void main(String[] args) {
+        System.out.println("Standard main method");
+        main("Overloaded main");
+    }
+
+    public static void main(String arg) {
+        System.out.println(arg);
+    }
+}
+```
+
+---
