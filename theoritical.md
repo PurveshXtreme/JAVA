@@ -501,3 +501,121 @@ public class MainOverload {
 ```
 
 ---
+---
+
+### Collections Framework (Core)
+
+🔹 What is the Java Collection Framework?
+
+The Java Collection Framework (JCF) is a set of classes and interfaces that provide ready-made data structures and algorithms to store, manipulate, and access data efficiently.
+
+---
+
+# 🔹 Hierarchy of the Java Collection Framework
+
+The **Java Collection Framework (JCF)** is organized into a **well-defined hierarchy** of interfaces and classes that represent different types of data structures.
+
+At the top of the hierarchy lies the **`Iterable`** interface, which is the root for all collection classes (except Map).
+
+---
+
+## 🧩 Basic Structure
+
+![Java Collection Framework Hierarchy](https://media.geeksforgeeks.org/wp-content/uploads/20250901105730206395/2.webp)
+
+
+```
+                 Iterable
+                     |
+                Collection
+           /          |          \
+         List        Set         Queue
+                      \
+                     SortedSet (NavigableSet)
+```
+
+And separately:
+
+```
+                    Map
+                     |
+                SortedMap (NavigableMap)
+```
+
+---
+
+## 🔸 Explanation of Major Interfaces
+
+### 1. **Iterable**
+- Root interface for all collection classes.
+- Provides the **`iterator()`** method to iterate over elements using enhanced for-loops.
+- Example:  
+  ```java
+  for (int x : list) { ... }
+  ```
+
+---
+
+### 2. **Collection**
+- The root interface for all **List**, **Set**, and **Queue** types.
+- Defines common operations like `add()`, `remove()`, `clear()`, `size()`, etc.
+
+---
+
+### 3. **List Interface**
+- **Ordered collection**, allows **duplicate** elements.
+- Elements can be **accessed by index**.
+- **Implementations:**
+  - `ArrayList` → dynamic array
+  - `LinkedList` → doubly linked list
+  - `Vector` → synchronized version of ArrayList
+  - `Stack` → LIFO structure (extends Vector)
+
+---
+
+### 4. **Set Interface**
+- **Unordered collection** that does **not allow duplicates**.
+- **Implementations:**
+  - `HashSet` → backed by a `HashMap`, unordered
+  - `LinkedHashSet` → maintains insertion order
+  - `TreeSet` → stores elements in sorted order (uses a Red-Black Tree)
+
+---
+
+### 5. **Queue Interface**
+- Follows **FIFO (First In, First Out)** order.
+- Used for scheduling or task queues.
+- **Implementations:**
+  - `PriorityQueue` → elements ordered by priority (min-heap by default)
+  - `LinkedList` → can also act as a queue
+  - `Deque` → double-ended queue (can be used as stack/queue)
+
+---
+
+### 6. **Map Interface**
+- Stores elements as **key-value pairs**.
+- Keys must be **unique**, values can be **duplicated**.
+- Not a part of the `Collection` interface but belongs to the framework.
+- **Implementations:**
+  - `HashMap` → unordered
+  - `LinkedHashMap` → insertion order
+  - `TreeMap` → sorted order (by keys)
+  - `Hashtable` → synchronized (legacy)
+  - `ConcurrentHashMap` → thread-safe
+
+---
+
+## 🧠 Summary Table
+
+| Interface | Allows Duplicates | Maintains Order | Key Implementations |
+|------------|------------------|------------------|---------------------|
+| **List** | ✅ Yes | ✅ Yes | ArrayList, LinkedList |
+| **Set** | ❌ No | ⚠️ Some (LinkedHashSet) | HashSet, TreeSet |
+| **Queue** | ⚠️ Depends | ✅ Yes | PriorityQueue, LinkedList |
+| **Map** | ❌ Keys only | ⚠️ Some (LinkedHashMap) | HashMap, TreeMap |
+
+---
+
+
+
+
