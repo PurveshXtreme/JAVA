@@ -837,7 +837,139 @@ public class ConcurrentHashMap<K, V>
 | Purpose | Collection of unique elements | Key-value pairs storage |
 
 ---
+---
 
+### Exception Handling
+
+# ☕ Java Exception Handling — Complete Notes
+
+---
+
+## 🔹 What is Exception Handling?
+
+An **Exception** in Java is an **event that interrupts the normal flow** of program execution and requires special handling.  
+The **Java Exception Handling mechanism** allows developers to manage runtime errors gracefully, preventing abrupt program termination.
+
+### ⚙️ Common Causes of Exceptions
+- Device failure  
+- Loss of network connection  
+- Code errors  
+- Opening an unavailable file  
+- Invalid user input  
+- Physical limitations (e.g., out of memory)
+
+---
+
+## 🔹 Types of Exceptions in Java
+
+Java exceptions are broadly classified into two categories:
+
+### 1. **Built-in Exceptions**
+Provided by Java libraries, these are predefined and can be further divided into:
+
+#### ✅ Checked Exceptions
+Handled **during compile-time**. The compiler ensures these are either caught or declared using `throws`.
+- `IOException`
+- `FileNotFoundException`
+- `ClassNotFoundException`
+- `InterruptedException`
+
+#### ⚠️ Unchecked Exceptions
+Handled **during runtime** (not checked by compiler). Usually occur due to programming mistakes.
+- `NullPointerException`
+- `ArrayIndexOutOfBoundsException`
+- `ArithmeticException`
+- `RuntimeException`
+
+### 2. **User-Defined Exceptions**
+Created by programmers for handling specific cases not covered by built-in exceptions.  
+Defined by extending the `Exception` class.
+
+```java
+class MyCustomException extends Exception {
+    public MyCustomException(String message) {
+        super(message);
+    }
+}
+```
+
+---
+
+## 🔹 Difference Between Error and Exception
+
+| **Aspect** | **Errors** | **Exceptions** |
+|-------------|-------------|----------------|
+| **Recoverability** | Cannot be recovered from | Can be handled or recovered using `try-catch` or `throws` |
+| **Type** | Always unchecked | Can be checked or unchecked |
+| **Cause** | Environment-related (JVM issues) | Program-related (logic or runtime issues) |
+| **When Occur** | Compile-time or runtime | Runtime (checked known to compiler) |
+| **Package** | `java.lang.Error` | `java.lang.Exception` |
+| **Examples** | `StackOverflowError`, `OutOfMemoryError` | Checked: `IOException`, `SQLException` <br> Unchecked: `NullPointerException`, `ArithmeticException` |
+
+---
+
+## 🔹 Hierarchy of Exception Classes
+
+All exception and error types in Java are subclasses of the **`Throwable`** class.  
+
+```
+               Object
+                  │
+              Throwable
+              ┌────────┐
+              │        │
+           Exception   Error
+           ┌──────┐
+           │      │
+  Checked Exceptions  Unchecked (Runtime) Exceptions
+```
+
+### Key Points:
+- `Throwable` → Base class for all exceptions and errors.
+- `Exception` → Represents issues that programs should handle.
+- `Error` → Represents serious system failures (JVM related).
+
+📌 Example:
+- `NullPointerException` → Subclass of `RuntimeException` → Subclass of `Exception`
+- `StackOverflowError` → Subclass of `Error`
+
+---
+
+## 🔹 Runtime Exceptions (Unchecked)
+
+**Runtime Exceptions** occur **during program execution**.  
+They are **not checked by the compiler** and usually indicate programming mistakes.
+
+### ✴️ Common Runtime Exceptions
+- **`NullPointerException`** → Using an object reference that is `null`.  
+- **`ArrayIndexOutOfBoundsException`** → Accessing array index beyond valid range.  
+- **`ArithmeticException`** → Division by zero or invalid arithmetic.  
+- **`IllegalArgumentException`** → Passing invalid or inappropriate argument to a method.  
+
+### 💡 Key Points:
+- Do **not** require `throws` declaration.
+- Should still be handled with `try-catch` to prevent crashes.
+- Help identify logical and coding errors quickly.
+
+---
+
+## 🔹 NullPointerException (NPE)
+
+`NullPointerException` is a **runtime exception** thrown when:
+- You try to **access or modify** an object reference that is `null`.
+
+### 🧠 Example:
+```java
+String str = null;
+System.out.println(str.length()); // Throws NullPointerException
+```
+
+### ✅ Prevention Tips:
+- Always check if an object is `null` before use.
+- Use **Optional** (Java 8+) to handle nullable objects.
+- Initialize objects properly before accessing them.
+
+---
 
 
 
