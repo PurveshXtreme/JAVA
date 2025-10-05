@@ -970,6 +970,121 @@ System.out.println(str.length()); // Throws NullPointerException
 - Initialize objects properly before accessing them.
 
 ---
+---
 
+# ☕ Java Exception Handling — Keywords and Custom Exceptions
+
+---
+
+## 🔹 1. try
+
+The `try` block contains code that **might throw an exception**.  
+It must be followed by **catch** or **finally** block.
+
+```java
+try {
+    int result = 10 / 0; // may throw ArithmeticException
+} 
+```
+
+---
+
+## 🔹 2. catch
+
+The `catch` block is used to **handle exceptions** thrown by the `try` block.  
+You can have **multiple catch blocks** to handle different exception types.
+
+```java
+try {
+    int result = 10 / 0;
+} catch (ArithmeticException e) {
+    System.out.println("Cannot divide by zero: " + e.getMessage());
+}
+```
+
+---
+
+## 🔹 3. finally
+
+The `finally` block is **always executed**, regardless of whether an exception occurs or not.  
+It is typically used for **resource cleanup** (e.g., closing files, DB connections).
+
+```java
+try {
+    int result = 10 / 2;
+} catch (ArithmeticException e) {
+    System.out.println("Exception caught");
+} finally {
+    System.out.println("This always executes");
+}
+```
+
+---
+
+## 🔹 4. throw
+
+The `throw` keyword is used to **explicitly throw an exception** from a method or block.
+
+```java
+public void checkAge(int age) {
+    if (age < 18) {
+        throw new ArithmeticException("Age must be 18 or above");
+    }
+}
+```
+
+---
+
+## 🔹 5. throws
+
+The `throws` keyword is used in a **method signature** to declare the exceptions it might throw.  
+It informs the **caller** that they must handle or propagate these exceptions.
+
+```java
+public void readFile(String fileName) throws IOException {
+    FileReader file = new FileReader(fileName);
+    file.read();
+}
+```
+
+---
+
+## 🔹 6. Custom Exceptions (User-Defined)
+
+Custom exceptions allow you to **define your own exception types** for specific scenarios.
+
+```java
+// Define a custom exception
+class MyCustomException extends Exception {
+    public MyCustomException(String message) {
+        super(message);
+    }
+}
+
+// Use custom exception
+public class Main {
+    public static void validate(int number) throws MyCustomException {
+        if (number < 0) {
+            throw new MyCustomException("Number must be non-negative");
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            validate(-5);
+        } catch (MyCustomException e) {
+            System.out.println("Custom Exception caught: " + e.getMessage());
+        }
+    }
+}
+```
+
+**Output:**
+```
+Custom Exception caught: Number must be non-negative
+```
+
+---
+---
 
 
