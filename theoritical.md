@@ -9,6 +9,7 @@
 - [OOP Concepts](#oop-concepts)  
 - [Collections Framework (Core)](#collections-framework-core)  
 - [Exception Handling](#exception-handling)  
+- [Multithreading](#multithreading)  
 
 
 ---
@@ -1087,4 +1088,192 @@ Custom Exception caught: Number must be non-negative
 ---
 ---
 
+### Multithreading
+
+# ☕ Java Multithreading & Concurrency — Core Concepts
+
+---
+
+## 🔹 What is Multithreading?
+
+**Multithreading** in Java allows the **concurrent execution** of two or more parts of a program to make efficient use of CPU.  
+Each part of such a program is called a **thread**, and all threads share the same memory space.
+
+---
+
+## 🔹 Creating Threads in Java
+
+There are **two primary ways** to create threads in Java:
+
+### 1. Extending the `Thread` Class
+```java
+class MyThread extends Thread {
+    public void run() {
+        System.out.println("Thread running using Thread class.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MyThread t1 = new MyThread();
+        t1.start();  // starts the thread and calls run()
+    }
+}
+```
+
+### 2. Implementing the `Runnable` Interface
+```java
+class MyRunnable implements Runnable {
+    public void run() {
+        System.out.println("Thread running using Runnable interface.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new MyRunnable());
+        t1.start();
+    }
+}
+```
+
+> ✅ Prefer **Runnable** over **Thread inheritance** when your class needs to extend another class (since Java supports single inheritance only).
+
+---
+
+## 🔹 Thread Lifecycle
+
+A thread in Java goes through the following **stages**:
+
+1. **New** → Thread created but not started (`Thread t = new Thread()`).
+2. **Runnable** → Thread is ready to run but waiting for CPU time (`t.start()`).
+3. **Running** → Thread is currently executing its `run()` method.
+4. **Blocked / Waiting** → Thread temporarily inactive, waiting for a monitor lock or signal.
+5. **Terminated (Dead)** → Thread has completed its execution or stopped due to an error.
+
+---
+
+## 🔹 Synchronization
+
+When multiple threads access shared data, **race conditions** can occur.  
+**Synchronization** ensures that only one thread accesses a resource at a time.
+
+### Using `synchronized` keyword
+```java
+class Counter {
+    private int count = 0;
+
+    public synchronized void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+```
+
+> The `synchronized` keyword locks the method or block so only one thread can execute it at a time.
+
+---
+
+## 🔹 volatile Keyword
+
+The `volatile` keyword ensures that changes to a variable are **immediately visible** to all threads.  
+It prevents threads from caching variables locally.
+
+```java
+volatile boolean flag = true;
+```
+
+> Used for lightweight synchronization where atomicity is not required.
+
+---
+
+## 🔹 Thread Communication — wait(), notify(), notifyAll()
+
+Used when multiple threads **share resources** and need to **communicate** with each other.
+
+- `wait()` — thread releases the lock and waits.
+- `notify()` — wakes up one waiting thread.
+- `notifyAll()` — wakes up all waiting threads.
+
+```java
+class Shared {
+    synchronized void printMessage() throws InterruptedException {
+        wait();  // waits for notify()
+        System.out.println("Thread resumed");
+    }
+
+    synchronized void trigger() {
+        notify();  // wakes waiting thread
+    }
+}
+```
+
+---
+
+## 🔹 sleep() Method
+
+`Thread.sleep(milliseconds)` pauses the current thread for the specified time.
+
+```java
+Thread.sleep(1000); // pauses for 1 second
+```
+
+---
+
+## 🔹 Thread Safety Basics
+
+A class is **thread-safe** if it behaves correctly when accessed by multiple threads simultaneously.
+
+✅ Tips for thread safety:
+- Use **synchronized** methods or blocks.
+- Prefer **immutable** objects.
+- Use **atomic classes** (e.g., `AtomicInteger`, `AtomicBoolean`).
+- Use concurrent collections like `ConcurrentHashMap`.
+
+---
+
+## 🔹 ConcurrentHashMap
+
+`ConcurrentHashMap` is a **thread-safe version of HashMap** that allows **concurrent reads** and **controlled writes** without locking the entire map.
+
+### Features:
+- Concurrent read operations.
+- Partial locking (only segments, not entire map).
+- No `ConcurrentModificationException`.
+
+### Example:
+```java
+import java.util.concurrent.ConcurrentHashMap;
+
+public class Main {
+    public static void main(String[] args) {
+        ConcurrentHashMap<Integer, String> map = new ConcurrentHashMap<>();
+        map.put(1, "Java");
+        map.put(2, "Python");
+
+        System.out.println(map.get(1)); // Output: Java
+    }
+}
+```
+
+---
+
+## ✅ Summary Table
+
+| Concept | Description |
+|----------|--------------|
+| **Thread creation** | `extends Thread` or `implements Runnable` |
+| **Lifecycle** | New → Runnable → Running → Waiting → Terminated |
+| **Synchronization** | Prevents concurrent data corruption |
+| **volatile** | Ensures variable visibility between threads |
+| **wait/notify** | Thread communication |
+| **sleep()** | Pause execution |
+| **Thread safety** | Ensures consistent behavior under concurrency |
+| **ConcurrentHashMap** | Thread-safe, high-performance map |
+
+---
+---
 
