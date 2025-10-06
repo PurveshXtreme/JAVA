@@ -86,6 +86,49 @@ Key points:
 | **Customization** | Limited | Flexible and customizable |
 
 ---
+# Spring Boot Architecture
+
+Spring Boot simplifies Spring-based application development with a **layered architecture**:
+
+---
+
+## 1. **Spring Core**
+- Manages **Dependency Injection (DI)** and **Inversion of Control (IoC)**.
+- Handles **beans and application context**.
+
+---
+
+## 2. **Spring Boot Starters**
+- Pre-configured **dependency templates** for common functionalities.
+- Examples: `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, `spring-boot-starter-security`.
+
+---
+
+## 3. **Auto-Configuration**
+- Automatically configures beans based on **classpath dependencies**.
+- Reduces manual setup via `@EnableAutoConfiguration`.
+
+---
+
+## 4. **Embedded Servers**
+- Uses **Tomcat, Jetty, or Undertow**.
+- Enables **standalone execution** without external servers.
+
+---
+
+## 5. **Spring Boot Actuator**
+- Provides **monitoring and management endpoints**.
+- Examples: `/actuator/health`, `/actuator/metrics`.
+
+---
+
+## 6. **Application Properties & Profiles**
+- External configuration via `application.properties` or `application.yml`.
+- Supports **multi-environment setups** with `@Profile`.
+
+---
+
+
 
 ## 🔹 Internal Working of Spring Boot
 
