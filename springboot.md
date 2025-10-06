@@ -24,6 +24,7 @@
 ## 🔹 What is Spring Boot?
 
 **Spring Boot** is a framework built on top of the Spring framework to **create stand-alone, production-grade web applications** with minimal configuration.  
+--standalone means that the application can run independently without requiring an external application server like Tomcat or Jetty to be installed separately.
 Key points:
 
 - No need for external servers — uses **embedded servers** like Tomcat or Jetty.
