@@ -262,5 +262,231 @@ Spring Boot simplifies Spring-based application development with a **layered arc
   - Simplifies creation of RESTful APIs.
 
 ---
+
+### 📘 Core Spring Boot Annotations
+
+#### 1. **@Controller**
+- Used to mark a class as a **Spring MVC Controller**.
+- Handles **web requests** and returns **views (HTML pages)**.
+- Commonly used in traditional web applications (not REST APIs).
+
+```java
+@Controller
+public class HomeController {
+    @GetMapping("/home")
+    public String home() {
+        return "home"; // returns view name (home.html)
+    }
+}
+```
+
+---
+
+#### 2. **@RestController**
+- Combines `@Controller` and `@ResponseBody`.
+- Used for **RESTful APIs** — directly returns data (like JSON/XML) instead of views.
+
+---
+
+#### 3. **@Service**
+- Marks a class as a **service layer** component.
+- Used to hold **business logic**.
+- Makes the class eligible for **component scanning and dependency injection**.
+
+```java
+@Service
+public class UserService {
+    public String getUser() {
+        return "Purvesh";
+    }
+}
+```
+
+---
+
+#### 4. **@Repository**
+- Used on **DAO (Data Access Object)** classes.
+- Indicates that the class interacts with the **database**.
+- Provides **automatic exception translation** (converts SQL exceptions into Spring DataAccessExceptions).
+
+```java
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> { }
+```
+
+---
+
+#### 5. **@Component**
+- The **generic stereotype** for any Spring-managed bean.
+- Used when a class doesn’t fit into Controller, Service, or Repository layers.
+- Spring automatically detects it using **component scanning**.
+
+```java
+@Component
+public class EmailValidator {
+    public boolean isValid(String email) { ... }
+}
+```
+
+---
+
+#### 6. **@Autowired**
+- Used for **automatic dependency injection**.
+- Spring automatically injects the required bean by **type**.
+
+```java
+@Autowired
+private UserService userService;
+```
+
+---
+
+#### 7. **@Qualifier**
+- Used **with @Autowired** when multiple beans of the same type exist.
+- Helps specify **which bean** should be injected.
+
+```java
+@Autowired
+@Qualifier("emailService")
+private NotificationService notificationService;
+```
+
+---
+
+#### 8. **@GetMapping**
+- Handles **HTTP GET requests**.
+- Commonly used to **fetch data**.
+
+```java
+@GetMapping("/users")
+public List<User> getUsers() { ... }
+```
+
+---
+
+#### 9. **@PostMapping**
+- Handles **HTTP POST requests**.
+- Commonly used to **create new data**.
+
+```java
+@PostMapping("/users")
+public User createUser(@RequestBody User user) { ... }
+```
+
+---
+---
+
+### Starters and Dependencies
+
+## ⚙️ Spring Boot Starter Dependencies & Dependency Management
+
+---
+
+### 🧩 7. What are the Spring Boot Starter Dependencies?
+
+Spring Boot provides **starter dependencies** — a set of convenient dependency bundles to simplify project setup.  
+Each starter includes a curated list of libraries for specific functionalities, ensuring compatibility.
+
+**Common Spring Boot Starters:**
+- **spring-boot-starter-data-jpa** → For database access using Spring Data JPA.
+- **spring-boot-starter-web** → For building RESTful web applications.
+- **spring-boot-starter-security** → For securing applications.
+- **spring-boot-starter-test** → For unit and integration testing.
+- **spring-boot-starter-thymeleaf** → For building web applications with Thymeleaf templates.
+
+---
+
+### 📦 13. What is Spring Boot Dependency Management?
+
+Spring Boot **dependency management** ensures all dependencies are:
+- **Compatible** with the Spring Boot version used.
+- **Automatically versioned**, avoiding conflicts.
+- **Easy to add** — just include the starter, and all transitive dependencies are managed.
+
+📘 Example:
+If you want to create a web application, just include:
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+
+📸 **Visual Overview:**
+![Spring Boot Dependency Management](https://media.geeksforgeeks.org/wp-content/uploads/20231222123658/Spring-Boot-Interview-Questions--3.png)
+
+---
+
+### 🚀 15. What is the Starter Dependency of the Spring Boot Module?
+
+**Spring Boot Starters** are pre-configured sets of dependencies designed for specific functionalities like web, data, or security.
+
+They handle:
+- **Required dependencies**
+- **Version control**
+- **Auto-configuration**
+
+📘 Example: To add a web starter dependency
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+
+✅ **Key Benefits:**
+- Reduces manual dependency management.
+- Prevents version conflicts.
+- Speeds up development.
+
+---
+---
+
+### Auto-Configuration
+
+## ⚙️ Auto-Configuration in Spring Boot
+
+---
+
+### 🔹 What is AutoConfiguration?
+
+**Auto-Configuration** is one of Spring Boot’s key features that automatically configures your application based on the dependencies present in your project.  
+It eliminates the need for manual setup by intelligently applying configuration defaults.
+
+✅ **Example:**  
+If `spring-boot-starter-web` is present, Spring Boot automatically:
+- Configures **Tomcat** as the default web server.
+- Sets up **DispatcherServlet**.
+- Configures **Jackson** for JSON serialization.
+
+📘 **Annotation Used:**  
+`@EnableAutoConfiguration`  
+This tells Spring Boot to start auto-configuring beans based on what it finds on the classpath.
+
+---
+
+### ❌ 18. How to Disable a Specific Auto-Configuration Class?
+
+Sometimes you may want to **exclude** certain auto-configurations that are not required or that conflict with custom configurations.
+
+You can disable specific classes using the **`exclude`** attribute of the `@EnableAutoConfiguration` annotation.
+
+📘 **Syntax:**
+```java
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
+```
+
+📘 **Alternative (recommended way):**
+You can also exclude using the `@SpringBootApplication` annotation:
+```java
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+```
+
+✅ **Use case example:**  
+If you don’t need Spring Security auto-configured, exclude it to prevent unnecessary security prompts.
+
+---
 ---
 
