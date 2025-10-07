@@ -490,3 +490,593 @@ If you don’t need Spring Security auto-configured, exclude it to prevent unnec
 ---
 ---
 
+### Embedded Servers and Configuration
+
+## 🌐 Embedded Servers and Configuration in Spring Boot
+
+---
+
+### 🔹 14. Changing the Port of Embedded Tomcat Server
+
+Yes, it’s possible to change the port of the **embedded Tomcat server** in Spring Boot.
+
+By default, Spring Boot runs the application on **port 8080**.  
+You can change it by adding this property in `application.properties`:
+
+```properties
+server.port=8081
+```
+
+✅ **Alternatively**, if you’re using `application.yml`:
+```yaml
+server:
+  port: 8081
+```
+
+---
+
+### 🔹 16. What is the Default Port of Tomcat in Spring Boot?
+
+The **default port** of the embedded Tomcat server is **8080**.  
+It can be changed using the `server.port` property as shown above.
+
+---
+
+### 🔹 17. Can We Disable the Default Web Server?
+
+Yes ✅  
+You can disable the **embedded web server** (Tomcat/Jetty/Undertow) by setting the port to **-1**.
+
+📘 **Example:**
+```properties
+server.port=-1
+```
+
+This is useful when you are running **non-web** Spring Boot applications like CLI tools or batch jobs.
+
+---
+
+### 🔹 26. Difference Between WAR and Embedded Containers
+
+| Feature | WAR | Embedded Containers |
+|----------|-----|----------------------|
+| **Packaging** | Contains all files needed to deploy to an external web server. | Includes the web server (Tomcat/Jetty) within the same JAR file. |
+| **Configuration** | Requires external configuration files (like `web.xml`, `context.xml`). | Uses internal configuration properties and annotations. |
+| **Deployment** | Deployed to external servers like Tomcat or JBoss. | Runs independently with `java -jar app.jar`. |
+| **Security** | Can rely on web server-level security settings. | Can use built-in Spring Boot and JRE security features. |
+
+---
+
+✅ **In short:**
+- **WAR** → Used for external deployment (traditional style).  
+- **Embedded container (JAR)** → Used for standalone Spring Boot apps (modern approach).
+
+---
+---
+
+### Application Startup and Flow
+
+## ⚙️ Application Startup and Request Flow in Spring Boot
+
+---
+
+### 🔹 8. How Does a Spring Boot Application Get Started?
+
+A **Spring Boot application** starts with the `main()` method, where the `@SpringBootApplication` annotation marks the entry point of the application.  
+The `SpringApplication.run()` method bootstraps the application — it sets up the **Spring ApplicationContext**, **auto-configuration**, and starts the **embedded server** (like Tomcat).
+
+📘 **Example:**
+```java
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MyApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MyApplication.class, args);
+    }
+}
+```
+
+✅ **Key Steps:**
+1. `@SpringBootApplication` triggers auto-configuration, component scanning, and bean initialization.
+2. `SpringApplication.run()` creates and refreshes the **ApplicationContext**.
+3. The **embedded server (Tomcat/Jetty)** starts automatically.
+4. The application becomes ready to handle incoming HTTP requests.
+
+---
+
+### 🔹 20. Flow of HTTP Requests in a Spring Boot Application
+
+The HTTP request flow in a Spring Boot application follows a layered architecture:
+
+1. **Client Layer:**  
+   The client (browser, Postman, etc.) sends an **HTTP request** (GET, POST, PUT, DELETE) to the application.
+
+2. **Controller Layer:**  
+   The **Controller** (annotated with `@RestController` or `@Controller`) receives the request and maps it to a handler method using annotations like `@RequestMapping` or `@GetMapping`.
+
+3. **Service Layer:**  
+   Contains the **business logic** of the application. It processes data and communicates with the repository layer.
+
+4. **Repository Layer:**  
+   Handles all **database operations** using **Spring Data JPA** (CRUD — Create, Read, Update, Delete).
+
+5. **Response:**  
+   The processed data or view (HTML/JSP/JSON) is sent back to the client as a response.
+
+📊 **Request Flow Diagram:**  
+![Spring Boot Request Flow](https://media.geeksforgeeks.org/wp-content/uploads/20241127172958716123/springboot---------interview---------questions.webp)
+
+---
+
+✅ **In short:**
+> Client → Controller → Service → Repository → Database → Response to Client
+
+---
+---
+
+### Spring Boot Actuator
+
+## ⚙️ Spring Boot Actuator
+
+---
+
+### 🔹 27. What is Spring Boot Actuator?
+
+**Spring Boot Actuator** is a module in Spring Boot that provides **production-ready features** such as monitoring, metrics, and health checks for your application.  
+It helps developers and DevOps teams **track application health, performance, and behavior** in real-time — without writing extra code.
+
+📘 **Key Features:**
+- Provides **built-in endpoints** for monitoring (e.g., `/actuator/health`, `/actuator/info`, `/actuator/metrics`).
+- Offers **integration with tools** like Prometheus, Grafana, and Spring Boot Admin.
+- Supports **custom endpoints** for application-specific monitoring.
+
+> 📝 **Note:** To use Actuator, simply add the dependency:  
+> `spring-boot-starter-actuator`
+
+---
+
+### 🔹 28. How to Enable Actuator in a Spring Boot Application?
+
+To enable and use Actuator in your Spring Boot project:
+
+#### ✅ **Steps:**
+
+1. **Add the Actuator dependency** to `pom.xml`:
+   ```xml
+   <dependency>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-actuator</artifactId>
+   </dependency>
+   ```
+
+2. **Enable endpoints** in `application.properties`:
+   ```properties
+   management.endpoints.web.exposure.include=*
+   management.endpoint.health.show-details=always
+   ```
+
+3. **Run the Application.**
+   Start your Spring Boot app, and access endpoints like:
+   ```
+   http://localhost:8080/actuator/health
+   http://localhost:8080/actuator/info
+   ```
+
+---
+
+✅ **In short:**
+> **Spring Boot Actuator** = Real-time Monitoring + Health Check + Metrics + Management Endpoints
+
+--- 
+---
+
+### Profiles and Properties
+
+## 🌿 Spring Boot Profiles & Logging
+
+---
+
+### 🔹 25. What are Profiles in Spring?
+
+**Spring Profiles** allow you to define **different configurations for different environments** — such as *development*, *testing*, and *production*.
+
+📘 **Key Points:**
+- Helps isolate environment-specific configurations (like database URLs or API keys).  
+- Uses the `@Profile` annotation to specify which beans/configurations belong to which profile.
+- You can **activate a profile** using:
+  ```properties
+  spring.profiles.active=dev
+  ```
+  or via command-line:
+  ```bash
+  java -jar app.jar --spring.profiles.active=prod
+  ```
+
+✅ **Example:**
+```java
+@Profile("dev")
+@Configuration
+public class DevConfig {
+    // Beans specific to development environment
+}
+```
+
+---
+
+### 🔹 32. How to Check Environment Properties in Spring Boot?
+
+You can use the **Environment** object to access environment properties and configuration values (from `.properties`, command-line, or environment variables).
+
+✅ **Example:**
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+
+@Component
+public class EnvChecker {
+
+    @Autowired
+    private Environment env;
+
+    public void printProperties() {
+        System.out.println(env.getProperty("spring.datasource.url"));
+        System.out.println(env.getActiveProfiles()[0]);
+    }
+}
+```
+
+---
+
+### 🔹 33. How to Enable Debugging Logs in Spring Boot?
+
+You can enable **debug-level logging** in Spring Boot to get more detailed logs.
+
+#### ✅ Option 1 — application.properties
+```properties
+logging.level.root=DEBUG
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} - %msg%n
+```
+
+#### ✅ Option 2 — Command Line
+```bash
+java -jar app.jar --debug
+```
+
+#### ✅ Option 3 — Change Log Level at Runtime (using Actuator)
+```bash
+curl -X POST http://localhost:8080/actuator/loggers/<logger-name> \
+-H "Content-Type: application/json" \
+-d '{"configuredLevel": "DEBUG"}'
+```
+
+---
+
+✅ **Summary**
+| Concept | Purpose |
+|----------|----------|
+| **Profiles** | Define environment-specific configurations |
+| **Environment** | Access app configuration and system properties |
+| **Debug Logs** | Enable detailed logging for troubleshooting |
+
+---
+---
+
+### Dependency Injection and IoC
+
+## ⚙️ Spring Core Concepts — Dependency Injection & Beans
+
+---
+
+### 🔹 34. What is Dependency Injection (DI)?
+
+**Dependency Injection (DI)** is a **design pattern** used in Spring to achieve **loose coupling** between objects.
+
+Instead of an object creating its dependencies, they are **provided (injected)** by the Spring **IoC container**.
+
+📘 **Advantages:**
+- Increases reusability and testability  
+- Reduces tight coupling between components  
+- Simplifies object management  
+
+#### ✅ Types of Dependency Injection:
+1. **Constructor Injection**  
+   - Dependencies are injected through the constructor.  
+   ```java
+   @Component
+   public class Student {
+       private final Course course;
+
+       @Autowired
+       public Student(Course course) {
+           this.course = course;
+       }
+   }
+   ```
+
+2. **Setter Injection**  
+   - Dependencies are injected through setter methods.  
+   ```java
+   @Component
+   public class Student {
+       private Course course;
+
+       @Autowired
+       public void setCourse(Course course) {
+           this.course = course;
+       }
+   }
+   ```
+
+3. **Field Injection**  
+   - Dependencies are injected directly into fields using `@Autowired`.  
+   ```java
+   @Component
+   public class Student {
+       @Autowired
+       private Course course;
+   }
+   ```
+
+---
+
+### 🔹 35. What is an IoC (Inversion of Control) Container?
+
+The **IoC Container** in Spring is responsible for:
+- Creating, configuring, and managing the lifecycle of beans.
+- Performing **Dependency Injection** automatically.
+
+📦 **Common IoC Containers:**
+- **BeanFactory** – Basic container with lazy loading.  
+- **ApplicationContext** – Advanced container with extra features (like event handling, AOP support, etc.).
+
+✅ **Example:**
+```java
+ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+MyService service = context.getBean(MyService.class);
+```
+
+---
+
+### 🔹 36. Difference between Constructor and Setter Injection
+
+| **Feature** | **Constructor Injection** | **Setter Injection** |
+|--------------|----------------------------|----------------------|
+| **Dependency Injection Method** | Through constructor parameters | Through setter methods |
+| **Immutability** | Promotes immutability — dependencies fixed at creation | Allows mutable dependencies |
+| **When Used** | When all dependencies are mandatory | When some dependencies are optional |
+| **Overriding Dependencies** | Harder to override | Easier to override after object creation |
+
+---
+
+### 🔹 4. What is a Spring Bean?
+
+A **Spring Bean** is any object that is **managed by the Spring IoC container**.  
+Spring creates, initializes, and injects beans into other beans as required.
+
+✅ **Example:**
+```java
+@Component
+public class EmployeeService {
+    // This is a Spring Bean managed by the container
+}
+```
+
+---
+
+### 🔹 5. What are Inner Beans in Spring?
+
+**Inner Beans** are beans defined **within another bean’s configuration**.  
+They are used when a bean is **only needed by one specific bean** and doesn’t need a global name.
+
+✅ **Example (XML-based configuration):**
+```xml
+<bean id="student" class="com.example.Student">
+    <property name="course">
+        <bean class="com.example.Course"/>
+    </property>
+</bean>
+```
+Here, `Course` is an **Inner Bean** inside `Student`.
+
+---
+
+### 🔹 6. What is Bean Wiring?
+
+**Bean Wiring** is the process of **connecting beans together** so that they can collaborate.  
+It tells Spring **which beans depend on which other beans**.
+
+🧩 **Two Types of Bean Wiring:**
+1. **Autowiring:**  
+   Spring automatically injects dependencies using annotations like `@Autowired`.
+
+2. **Manual Wiring:**  
+   Dependencies are defined explicitly in configuration (XML or Java-based).
+
+✅ **Example:**
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public Engine engine() {
+        return new Engine();
+    }
+
+    @Bean
+    public Car car(Engine engine) {
+        return new Car(engine);
+    }
+}
+```
+
+---
+
+✅ **Summary**
+
+| Concept | Description |
+|----------|--------------|
+| **Dependency Injection** | Pattern for injecting dependent objects automatically |
+| **IoC Container** | Core mechanism managing bean lifecycle and DI |
+| **Spring Bean** | Object managed by IoC container |
+| **Inner Bean** | Bean defined within another bean’s configuration |
+| **Bean Wiring** | Process of linking dependent beans |
+| **Injection Types** | Constructor, Setter, Field |
+
+---
+---
+
+### Spring Data JPA and Database
+
+## 💾 Spring Data and Database Connectivity in Spring Boot
+
+---
+
+### 🔹 2. Explain Spring Data and What is Spring Data JPA?
+
+**Spring Data** is a part of the larger Spring framework designed to simplify **data access layers** in applications.  
+It provides a consistent, high-level abstraction for working with **different data sources** such as relational databases, NoSQL databases, and even cloud data stores.
+
+📘 **Key Features:**
+- Reduces boilerplate code for database operations  
+- Provides repositories with built-in CRUD methods  
+- Supports both SQL and NoSQL databases  
+- Offers integration with JPA, MongoDB, Elasticsearch, and more  
+
+---
+
+### 🧩 **Spring Data JPA**
+
+**Spring Data JPA** is a submodule of Spring Data that focuses on **JPA-based repositories** (Java Persistence API).  
+It simplifies working with **relational databases** like MySQL, PostgreSQL, or H2 by abstracting away repetitive JPA boilerplate.
+
+✅ **Example:**
+```java
+@Repository
+public interface StudentRepository extends JpaRepository<Student, Long> {
+    List<Student> findByName(String name);
+}
+```
+
+Spring Data JPA automatically implements this repository at runtime, so developers can focus on business logic instead of SQL queries.
+
+---
+
+### 🔹 8. What Error Occurs if H2 is Not Present in the Classpath?
+
+If the **H2 database driver** is missing from the classpath and Spring Boot attempts to auto-configure it, you’ll encounter the following error:
+
+```
+java.lang.ClassNotFoundException: org.h2.Driver
+```
+
+🛠 **Solution:**
+Add the following dependency in your `pom.xml`:
+```xml
+<dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+---
+
+### 🔹 9. Steps to Connect a Spring Boot Application to a Database Using JDBC
+
+To connect an external database (like **MySQL**, **PostgreSQL**, or **Oracle**) to Spring Boot using **JDBC**, follow these steps:
+
+#### ✅ 1. Add Database Driver Dependency
+For example, for MySQL:
+```xml
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+#### ✅ 2. Configure `application.properties`
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/mydatabase
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+```
+
+#### ✅ 3. Create a `JdbcTemplate` Bean
+```java
+@Configuration
+public class JdbcConfig {
+    @Autowired
+    private DataSource dataSource;
+
+    @Bean
+    public JdbcTemplate jdbcTemplate() {
+        return new JdbcTemplate(dataSource);
+    }
+}
+```
+
+#### ✅ 4. Use `JdbcTemplate` for Queries
+```java
+@Repository
+public class EmployeeRepository {
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    public List<Employee> findAll() {
+        return jdbcTemplate.query("SELECT * FROM employees",
+                (rs, rowNum) -> new Employee(rs.getInt("id"), rs.getString("name")));
+    }
+}
+```
+
+---
+
+### 🔹 11. What Do You Understand About Spring Data REST?
+
+**Spring Data REST** is a project that **automatically exposes Spring Data repositories as RESTful APIs**.  
+It uses the **Spring MVC** and **Spring HATEOAS** frameworks under the hood to convert your repository interfaces into REST endpoints — **without writing any controller code**.
+
+✅ **Example:**
+```java
+@RepositoryRestResource
+public interface ProductRepository extends JpaRepository<Product, Long> {}
+```
+
+This automatically exposes endpoints like:
+```
+GET /products
+POST /products
+GET /products/{id}
+```
+
+🧩 **Advantages:**
+- Rapid API generation  
+- Minimal configuration required  
+- Automatically supports pagination, sorting, and filtering  
+
+---
+
+### 🔹 12. Why is Spring Data REST Not Recommended for Real-World Applications?
+
+While **Spring Data REST** is useful for prototypes and small projects, it has **limitations** that make it less suitable for production-scale systems.
+
+| **Limitation** | **Description** |
+|-----------------|-----------------|
+| **Performance Issues** | Not optimized for large-scale systems with complex queries. |
+| **Versioning Challenges** | Difficult to manage API versioning over time. |
+| **Complex Relationships** | Handling entity relationships (One-to-Many, Many-to-Many) becomes cumbersome. |
+| **Limited Filtering** | Built-in filters are basic; advanced filtering requires custom code. |
+| **Security Concerns** | Exposes repositories directly, increasing potential attack surface. |
+
+🧠 **Better Approach:**  
+Use **Spring Data JPA** with **Spring MVC controllers** to build customized, secured, and versioned REST APIs.
+
+---
+---
+
+
+
