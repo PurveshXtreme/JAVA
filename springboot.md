@@ -1270,5 +1270,153 @@ Steps to deploy a Spring Boot application to an external server:
 > Spring Boot applications can run on any server that supports Java, or they can use the **embedded Tomcat/Jetty** server for standalone execution.
 
 ---
+
+# Spring Boot Configuration and Core Modules
+
+---
+
+## 🛠️ Application Properties
+
+### `application.properties` vs `application.yml`
+Both files are used for **external configuration** in Spring Boot.
+
+| Feature | `application.properties` | `application.yml` |
+|----------|--------------------------|------------------|
+| Format | Key-value pairs (`=`) | YAML (indentation-based) |
+| Example | `server.port=8081` | `server:\n  port: 8081` |
+| Readability | Simpler for small configs | Better for hierarchical configs |
+
+Spring Boot automatically loads whichever exists — or both (with `.yml` having higher priority).
+
+### Common Properties
+
+| Property | Description |
+|-----------|--------------|
+| `server.port=8081` | Changes the server port |
+| `spring.datasource.url=jdbc:mysql://localhost:3306/db_name` | Database connection URL |
+| `spring.datasource.username=root` | DB username |
+| `spring.datasource.password=pass` | DB password |
+| `spring.jpa.hibernate.ddl-auto=update` | Automatically updates database schema |
+| `spring.jpa.show-sql=true` | Displays SQL queries in console |
+
+---
+
+## 📦 Executable JAR vs WAR
+
+| Feature | JAR | WAR |
+|----------|-----|-----|
+| Deployment | Runs directly (`java -jar app.jar`) | Deployed in external server (e.g., Tomcat) |
+| Contains | Embedded server | Needs external server |
+| Simplicity | Easier to deploy and test | More suitable for enterprise use |
+| Usage | Common for Spring Boot apps | Used for legacy or shared hosting |
+
+---
+
+## 🗄️ Spring Data JPA
+
+### Core Annotations
+- **`@Entity`** → Marks a class as a JPA entity (maps to a database table).  
+- **`@Id`** → Marks the primary key field.  
+- **`@GeneratedValue`** → Automatically generates primary key values.
+
+```java
+@Entity
+public class User {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String name;
+}
+```
+
+### Repository Interfaces
+- **`CrudRepository`** → Basic CRUD operations.  
+- **`JpaRepository`** → Adds pagination, sorting, and JPA-specific methods.  
+- **`PagingAndSortingRepository`** → Adds paging and sorting support.
+
+Example:
+```java
+public interface UserRepository extends JpaRepository<User, Long> {
+    List<User> findByName(String name);
+}
+```
+
+### Query Methods
+Spring Data JPA allows methods like:
+- `findByEmail(String email)`
+- `findByAgeGreaterThan(int age)`
+
+You can also use **`@Query`**:
+```java
+@Query("SELECT u FROM User u WHERE u.email = ?1")
+User findByEmail(String email);
+```
+
+Or native SQL:
+```java
+@Query(value = "SELECT * FROM users WHERE name = ?1", nativeQuery = true)
+User findByNameNative(String name);
+```
+
+### Transactions
+`@Transactional` ensures that database operations run in a single transaction.
+
+```java
+@Transactional
+public void updateUser(User user) {
+    userRepository.save(user);
+}
+```
+
+---
+
+## 🔐 Spring Boot Security
+
+### Basic Authentication
+- Uses username and password for every request.
+- Defined in `application.properties`:
+  ```properties
+  spring.security.user.name=admin
+  spring.security.user.password=1234
+  ```
+- Automatically enabled when `spring-boot-starter-security` is added.
+
+---
+
+### JWT (JSON Web Token) Authentication
+Used for **stateless authentication**:
+1. User logs in → server generates a **JWT token**.
+2. Client sends the token with every request (`Authorization: Bearer <token>`).
+3. Server validates the token without storing session data.
+
+Benefits:
+- Stateless
+- Scalable
+- Secure with token expiration
+
+---
+
+### Role-Based Authorization
+Spring Security supports method-level security:
+
+- **`@PreAuthorize`**
+  ```java
+  @PreAuthorize("hasRole('ADMIN')")
+  public void deleteUser(Long id) { ... }
+  ```
+
+- **`@Secured`**
+  ```java
+  @Secured("ROLE_USER")
+  public void viewProfile() { ... }
+  ```
+
+These annotations ensure that only users with certain roles can access specific methods or endpoints.
+
+---
+
+
+
+---
 ---
 
