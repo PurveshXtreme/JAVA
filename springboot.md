@@ -12,10 +12,8 @@
 - [Spring Data JPA and Database](#spring-data-jpa-and-database)  
 - [Spring MVC and Thymeleaf](#spring-mvc-and-thymeleaf)  
 - [Development Tools and CLI](#development-tools-and-cli)  
-- [Web vs Non-Web Applications](#web-vs-non-web-applications)  
-- [Beans and Application Context](#beans-and-application-context)  
-- [Deployment](#deployment)
-
+- [Others](#others)
+- 
 ---
 ---
 
@@ -1078,5 +1076,199 @@ Use **Spring Data JPA** with **Spring MVC controllers** to build customized, sec
 ---
 ---
 
+### Spring MVC and Thymeleaf
 
+# Thymeleaf and Spring MVC
+
+## What is Thymeleaf?
+
+**Thymeleaf** is a **Java-based server-side template engine**. It is used in **Java web applications** to render **dynamic HTML pages**.  
+
+- Popular in the **Spring ecosystem**, especially **Spring Boot**.
+- Allows embedding **Java expressions** directly in HTML.
+- Supports **iteration, conditionals, and text formatting** inside HTML templates.
+
+**Example usage in Spring Boot:**
+
+```java
+@Controller
+public class UserController {
+
+    @GetMapping("/users")
+    public String getUsers(Model model) {
+        List<String> users = List.of("Alice", "Bob", "Charlie");
+        model.addAttribute("users", users);
+        return "user-list"; // Thymeleaf template name
+    }
+}
+```
+
+In `user-list.html`:
+
+```html
+<ul>
+    <li th:each="user : ${users}" th:text="${user}"></li>
+</ul>
+```
+
+---
+
+## Explain Spring MVC
+
+**Spring MVC** is a **web framework** based on the **Model-View-Controller (MVC) design pattern**.
+
+### Components:
+
+1. **Model** – Holds the application data and business logic.
+2. **View** – The UI representation (HTML, Thymeleaf, JSP).
+3. **Controller** – Handles incoming HTTP requests, processes them, and returns a response.
+
+### Features:
+
+- Separates **business logic** from **presentation layer**.
+- Supports **REST endpoints**, **form handling**, and **data binding**.
+- Works seamlessly with **Spring Boot**, **Thymeleaf**, and other view technologies.
+
+**Example:**
+
+```java
+@Controller
+public class HomeController {
+
+    @GetMapping("/home")
+    public String home(Model model) {
+        model.addAttribute("message", "Welcome to Spring MVC!");
+        return "home"; // points to home.html Thymeleaf template
+    }
+}
+```
+
+**Flow:**
+1. Client sends HTTP request → Controller.
+2. Controller processes request → interacts with Model.
+3. Controller returns **View name** → rendered by Thymeleaf or other template engine.
+4. Response sent to client.
+
+---
+---
+
+### Development Tools and CLI
+
+# Spring Boot Tools: Initializr, CLI, and DevTools
+
+## 10. What is Spring Initializr?
+
+**Spring Initializr** is an online tool that helps to **quickly create the skeleton of a Spring Boot project**.  
+
+- Provides **pre-configured project structure** with **Maven** or **Gradle** build files.
+- Sets up the basic **framework and dependencies** from scratch.
+- Allows selecting **Spring Boot version, dependencies, project metadata**, and packaging type (JAR/WAR).
+
+**Website:** [https://start.spring.io](https://start.spring.io)
+
+---
+
+## 11. Spring Boot CLI
+
+**Spring Boot CLI** is a **command-line tool** for creating, running, and managing Spring Boot applications.  
+
+- Built on **Groovy**.
+- Helps to **rapidly start projects** and **execute Spring Boot apps**.
+
+### Most used CLI commands:
+
+| Command | Purpose |
+|---------|---------|
+| `run` | Run a Spring Boot application |
+| `test` | Run tests |
+| `jar` | Build an executable JAR file |
+| `war` | Build a WAR file for deployment |
+| `--init` | Initialize a new Spring Boot project |
+| `--help` | Display CLI help |
+
+---
+
+## 7. What are Spring Boot DevTools?
+
+**Spring Boot DevTools** is a module that provides **development-time features** to improve productivity.  
+
+### Features:
+
+- **Automatic application restart** on code changes.
+- **Fast application startup** for iterative development.
+- **Actuator endpoints** for monitoring during development.
+- **Additional utilities** like live reload support.
+
+**Usage:** Add the dependency in `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+---
+---
+
+### Others
+
+# Spring Boot Advanced Concepts
+
+## 19. Non-Web Applications in Spring Boot
+
+Spring Boot is **not limited to web applications**. We can also create:
+
+- **Microservices**
+- **Console applications**
+- **Batch applications**
+
+These applications can leverage Spring Boot features like **dependency injection, configuration management, and auto-configuration** without requiring a web server.
+
+---
+
+## 31. Retrieving All Beans in Spring Boot
+
+Using the **`ApplicationContext`** object, we can get a **list of all beans** in a Spring Boot application.
+
+Example:
+
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+
+@Component
+public class BeanLister {
+
+    @Autowired
+    private ApplicationContext context;
+
+    public void listBeans() {
+        String[] beanNames = context.getBeanDefinitionNames();
+        for(String name : beanNames){
+            System.out.println(name);
+        }
+    }
+}
+```
+
+The `ApplicationContext` manages all beans and their dependencies in the application.
+
+---
+
+## 14. Deploying Spring Boot to a Different Server
+
+Steps to deploy a Spring Boot application to an external server:
+
+1. **Build** the Spring Boot application using Maven/Gradle.
+2. **Create a deployment package** (JAR or WAR).
+3. **Deploy** the package to the target server.
+4. **Start the server** to run the application.
+
+> Spring Boot applications can run on any server that supports Java, or they can use the **embedded Tomcat/Jetty** server for standalone execution.
+
+---
+---
 
