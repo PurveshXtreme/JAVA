@@ -1,4 +1,13 @@
-# Student Management REST API — Full Code (using your provided code)
+# Table of Contents
+
+- [Go to Student Management REST API](#student-management-rest-api)
+- [Go to To-Do Tracker with Status](#to-do-tracker-with-status)
+
+---
+---
+
+
+# Student Management REST API 
 
 # 📦 Dependencies Used
 
@@ -180,6 +189,143 @@ public class UserController {
 - Ensure your `application.properties` credentials and DB exist.
 - Use `mvn spring-boot:run` to start the app.
 - Test endpoints at `http://localhost:8080/api/users` (as you requested earlier).
+
+---
+---
+
+# To-Do Tracker with Status 
+
+---
+
+## Todo.java (Model)
+
+```java
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Todo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id; // Auto-generated task ID
+
+    @NotBlank(message = "Title cannot be blank")
+    private String title; // Task title
+
+    private String description; // Task description
+
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.PENDING; // Default status is PENDING
+
+    // Enum defined inside the class for task status
+    public enum Status {
+        PENDING, DONE
+    }
+}
+```
+
+---
+
+## TodoRepo.java (Repository)
+
+```java
+@Repository
+public interface TodoRepo extends JpaRepository<Todo, Integer> {
+
+    // Custom query method to filter tasks by status
+    List<Todo> findByStatus(Todo.Status status);
+}
+```
+
+---
+
+## TodoService.java (Service Layer)
+
+```java
+@Service
+public class TodoService {
+
+    @Autowired
+    private TodoRepo todoRepo;
+
+    // Add a new task
+    public Todo addTodo(Todo todo) {
+        return todoRepo.save(todo);
+    }
+
+    // Toggle the status of a task (PENDING ↔ DONE)
+    public Todo toggleStatus(int id) {
+        Todo todo = todoRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task Not Found!"));
+
+        if (todo.getStatus() == Todo.Status.PENDING) {
+            todo.setStatus(Todo.Status.DONE);
+        } else {
+            todo.setStatus(Todo.Status.PENDING);
+        }
+
+        return todoRepo.save(todo);
+    }
+
+    // Get all tasks
+    public List<Todo> getAllTodo() {
+        return todoRepo.findAll();
+    }
+
+    // Get tasks filtered by status
+    public List<Todo> findByStatus(Todo.Status status) {
+        return todoRepo.findByStatus(status);
+    }
+}
+```
+
+---
+
+## TodoController.java (Controller Layer)
+
+```java
+@RestController
+@RequestMapping("/api/todo")
+public class TodoController {
+
+    @Autowired
+    private TodoService todoService;
+
+    // POST /api/todo/ → Add a new task
+    @PostMapping("/")
+    public Todo addTodo(@Valid @RequestBody Todo todo) {
+        return todoService.addTodo(todo);
+    }
+
+    // PUT /api/todo/{id}/status → Toggle task status
+    @PutMapping("/{id}/status")
+    public Todo toggleStatus(@PathVariable int id) {
+        return todoService.toggleStatus(id);
+    }
+
+    // GET /api/todo → Get all tasks or filter by status
+    // Example: GET /api/todo?status=PENDING
+    @GetMapping
+    public List<Todo> getTodos(@RequestParam(required = false) Todo.Status status) {
+        if (status != null) {
+            return todoService.findByStatus(status);
+        }
+        return todoService.getAllTodo();
+    }
+}
+```
+
+---
+
+### ✅ Summary
+
+- **POST `/api/todo/`** → Add a new task.  
+- **PUT `/api/todo/{id}/status`** → Toggle the status of a task.  
+- **GET `/api/todo`** → Get all tasks or filter by status with query param `?status=PENDING` or `?status=DONE`.  
+- Default task status is **PENDING**.  
+- Uses **Enum** for status to prevent invalid values.  
+- Custom repository method `findByStatus` allows filtering efficiently.
 
 ---
 ---
