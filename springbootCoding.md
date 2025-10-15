@@ -3,6 +3,8 @@
 - [Go to Student Management REST API](#student-management-rest-api)
 - [Go to To-Do Tracker with Status](#to-do-tracker-with-status)
 - [Banking Transaction API](#banking-transaction-api)
+- [Jump to Library Management (Book + Author)](#4-library-management-book--author)
+
 
 
 ---
@@ -10,6 +12,24 @@
 
 
 # Student Management REST API 
+
+**Problem:**  
+Create a Spring Boot app to manage students.  
+Each student has: `id`, `name`, `email`, `department`.  
+
+**Endpoints:**  
+- `POST /students` → Add a new student.  
+- `GET /students` → Get all students.  
+- `GET /students/{id}` → Get a student by ID.  
+- `PUT /students/{id}` → Update student details.  
+- `DELETE /students/{id}` → Delete a student.  
+
+**Tests/Concepts Tested:**  
+- Handle “student not found” gracefully.  
+- Validate email format and non-empty name.  
+- Concepts: CRUD, REST design, `@Valid`, exception handling, Spring Data JPA.  
+
+---
 
 # 📦 Dependencies Used
 
@@ -197,6 +217,20 @@ public class UserController {
 
 # To-Do Tracker with Status 
 
+**Problem:**  
+Build a REST API for To-Do tasks.  
+Each task has: `id`, `title`, `description`, `status` (PENDING/DONE).  
+
+**Endpoints:**  
+- `POST /tasks` → Add new task.  
+- `PUT /tasks/{id}/status` → Update task status.  
+- `GET /tasks?status=PENDING` → Filter by status.  
+
+**Tests/Concepts Tested:**  
+- Return 400 for invalid status.  
+- Return 404 for missing task.  
+- Concepts: Request params, filtering, REST best practices.  
+
 ---
 
 ## Todo.java (Model)
@@ -334,6 +368,21 @@ public class TodoController {
 
 # Banking Transaction API
 
+**Problem:**  
+Design an API for simple bank accounts.  
+Each account has: `id`, `name`, `balance`.  
+
+**Endpoints:**  
+- `POST /accounts` → Create new account (balance starts at 0).  
+- `PUT /accounts/{id}/deposit` → Add amount.  
+- `PUT /accounts/{id}/withdraw` → Subtract amount.  
+
+**Constraints/Concepts Tested:**  
+- Prevent overdraft (balance < 0).  
+- Concepts: Basic CRUD, transactional updates, exception handling.  
+
+---
+
 ```java
 // ✅ model/Account.java
 package com.interview.demo.model;
@@ -441,6 +490,187 @@ public class AccountController {
     @PutMapping("/{id}/withdraw")
     public Account withdraw(@PathVariable long id, @RequestBody AmountRequest request) throws Exception {
         return accountService.subAmount(id, request.amount);
+    }
+}
+```
+
+---
+---
+
+# 4. Library Management (Book + Author)
+
+**Problem:**  
+Create a REST API with two entities: Book and Author.  
+Each author can have multiple books.  
+
+**Endpoints:**  
+- Add new author.  
+- Add book to author.  
+- List books by author.  
+
+**Concepts Tested:**  
+- One-to-Many mapping, `@JoinColumn`, DTO mapping, JPA relationships.
+
+---
+
+```java
+// ------------------------- Book.java -------------------------
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @NotBlank(message = "Title cannot be Blank")
+    private String title;
+
+    // Many books belong to one author
+    @ManyToOne
+    @JoinColumn(name = "author_id")  // foreign key in book table
+    private Author author;
+}
+```
+
+```java
+// ------------------------- Author.java -------------------------
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Author {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @NotBlank(message = "Name cannot be blank")
+    private String name;
+
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Invalid Email")
+    private String email;
+
+    // One author has many books
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<Book> books = new ArrayList<>();
+}
+```
+
+```java
+// ------------------------- AuthorRepo.java -------------------------
+@Repository
+public interface AuthorRepo extends JpaRepository<Author , Long> {
+}
+```
+
+```java
+// ------------------------- BookRepo.java -------------------------
+@Repository
+public interface BookRepo extends JpaRepository<Book , Long> {
+     List<Book> findByAuthor(Author author);
+}
+```
+
+```java
+// ------------------------- AuthorService.java -------------------------
+@Service
+public class AuthorService {
+
+    @Autowired
+    private AuthorRepo authorRepo;
+
+    // Add new author
+    public Author addNewAuthor(Author author){
+        return authorRepo.save(author);
+    }
+
+    // Get all authors
+    public List<Author> getAllAuthors(){
+        return authorRepo.findAll();
+    }
+
+    // Get author by id
+    public Author getAuthorById(long id){
+        return authorRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Author does not Exists"));
+    }
+}
+```
+
+```java
+// ------------------------- BookService.java -------------------------
+@Service
+public class BookService {
+
+    @Autowired
+    private BookRepo bookRepo;
+
+    @Autowired
+    private AuthorService authorService;
+
+    // Add new book for a specific author
+    public Book addNewBook(Book book , long authorId){
+        Author author = authorService.getAuthorById(authorId);
+        Book newBook = new Book();
+        newBook.setAuthor(author);
+        newBook.setTitle(book.getTitle());
+        return bookRepo.save(newBook);
+    }
+
+    // Get all books
+    public List<Book> getAllBooks(){
+        return bookRepo.findAll();
+    }
+
+    // Get books by author
+    public List<Book> getBookByAuthor(long authorId){
+        Author author = authorService.getAuthorById(authorId);
+        return bookRepo.findByAuthor(author);
+    }
+}
+```
+
+```java
+// ------------------------- LibraryController.java -------------------------
+@RestController
+@RequestMapping("/api/lib")
+public class LibraryController {
+
+    @Autowired
+    private AuthorService authorService;
+
+    @Autowired
+    private BookService bookService;
+
+    // Add a new author
+    @PostMapping("/author")
+    public Author addAuthor(@Valid @RequestBody Author author){
+        return authorService.addNewAuthor(author);
+    }
+
+    // Add a new book under a specific author
+    @PostMapping("/author/{id}/book")
+    public Book addBook(@Valid @RequestBody Book book , @PathVariable long id){
+        return bookService.addNewBook(book , id);
+    }
+
+    // Get all authors
+    @GetMapping("/author")
+    public List<Author> getAllAuthors(){
+        return authorService.getAllAuthors();
+    }
+
+    // Get all books or filter by authorId
+    @GetMapping("/book")
+    public List<Book> getAllBooks(@RequestParam(required = false) Long authorId){
+        if(authorId != null){
+            return bookService.getBookByAuthor(authorId);
+        }
+        return bookService.getAllBooks();
     }
 }
 ```
