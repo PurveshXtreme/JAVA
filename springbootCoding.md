@@ -2,6 +2,8 @@
 
 - [Go to Student Management REST API](#student-management-rest-api)
 - [Go to To-Do Tracker with Status](#to-do-tracker-with-status)
+- [Banking Transaction API](#banking-transaction-api)
+
 
 ---
 ---
@@ -326,6 +328,122 @@ public class TodoController {
 - Default task status is **PENDING**.  
 - Uses **Enum** for status to prevent invalid values.  
 - Custom repository method `findByStatus` allows filtering efficiently.
+
+---
+---
+
+# Banking Transaction API
+
+```java
+// ✅ model/Account.java
+package com.interview.demo.model;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Account {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @NotBlank(message = "Name cannot be null")
+    private String name;
+
+    private long balance = 0;
+}
+```
+
+```java
+// ✅ repo/AccountRepo.java
+package com.interview.demo.repo;
+
+@Repository
+public interface AccountRepo extends JpaRepository<Account, Long> {
+}
+```
+
+```java
+// ✅ service/AccountService.java
+package com.interview.demo.service;
+
+@Service
+public class AccountService {
+
+    @Autowired
+    private AccountRepo accountRepo;
+
+    public Account createAccount(String name) {
+        Account account = new Account();
+        account.setName(name);
+        return accountRepo.save(account);
+    }
+
+    public Account addAmount(long id, long amount) {
+        Account account = accountRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Account not found!"));
+
+        account.setBalance(account.getBalance() + amount);
+        return accountRepo.save(account);
+    }
+
+    public Account subAmount(long id, long amount) throws Exception {
+        Account account = accountRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Account not found!"));
+
+        long currentBalance = account.getBalance();
+        if (currentBalance < amount) {
+            throw new Exception("Not enough balance");
+        }
+
+        account.setBalance(currentBalance - amount);
+        return accountRepo.save(account);
+    }
+
+    public List<Account> getAllAccounts() {
+        return accountRepo.findAll();
+    }
+}
+```
+
+```java
+// ✅ controller/AccountController.java
+package com.interview.demo.controller;
+
+@RestController
+@RequestMapping("/api/account")
+public class AccountController {
+
+    @Autowired
+    private AccountService accountService;
+
+    // DTO for request body containing amount
+    public static class AmountRequest {
+        public long amount;
+    }
+
+    @GetMapping("/")
+    public List<Account> getAllAccounts() {
+        return accountService.getAllAccounts();
+    }
+
+    @PostMapping("/")
+    public Account createAccount(@RequestBody Account account) {
+        return accountService.createAccount(account.getName());
+    }
+
+    @PutMapping("/{id}/deposit")
+    public Account deposit(@PathVariable long id, @RequestBody AmountRequest request) {
+        return accountService.addAmount(id, request.amount);
+    }
+
+    @PutMapping("/{id}/withdraw")
+    public Account withdraw(@PathVariable long id, @RequestBody AmountRequest request) throws Exception {
+        return accountService.subAmount(id, request.amount);
+    }
+}
+```
 
 ---
 ---
