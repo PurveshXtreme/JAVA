@@ -4,6 +4,7 @@
 - [Go to To-Do Tracker with Status](#to-do-tracker-with-status)
 - [Banking Transaction API](#banking-transaction-api)
 - [Jump to Library Management (Book + Author)](#4-library-management-book--author)
+- [Batch Data API](#batch-data-api)
 
 
 
@@ -672,6 +673,155 @@ public class LibraryController {
         }
         return bookService.getAllBooks();
     }
+}
+```
+
+---
+---
+
+# Batch Data API
+
+### 🧩 Problem:
+Create a REST API with the following functionality:
+
+- **Endpoint:**  
+  `POST /users/bulk`  
+  Accepts a **JSON array** of user objects.
+
+- **Behavior:**  
+  Validate each user and **save only valid ones** (others should be rejected).
+
+- **Response:**  
+  Return a **summary JSON** with total saved and failed counts.
+
+### 🧠 Example Output:
+```json
+{
+  "saved": 8,
+  "failed": 2
+}
+```
+
+---
+
+### 🧩 Model — `User.java`
+```java
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @NotBlank(message = "Name cannot be Empty!")
+    private String name;
+
+    @NotBlank(message = "Email cannot be Empty!")
+    @Email(message = "Incorrect email format")
+    private String email;
+
+    private String department;
+}
+```
+
+---
+
+### 🧩 Repository — `UserRepo.java`
+```java
+@Repository
+public interface UserRepo extends JpaRepository<User , Long> {
+}
+```
+
+---
+
+### 🧩 Service — `UserService.java`
+```java
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepo userRepo;
+
+    public List<User> getAllUsers(){
+        return userRepo.findAll();
+    }
+
+    public Map<String, Object> addAllUsers(List<User> users){
+
+        int saved = 0;
+        int failed = 0;
+        List<User> addedUsers = new ArrayList<>();
+
+        for(User user : users){
+            if(user.getName() == null || user.getEmail() == null || user.getDepartment() == null){
+                failed++;
+                continue;
+            }
+            userRepo.save(user);
+            saved++;
+            addedUsers.add(user);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("saved", saved);
+        response.put("failed", failed);
+        response.put("users", addedUsers);
+
+        return response;
+    }
+}
+```
+
+---
+
+### 🧩 Controller — `Controller.java`
+```java
+@RestController
+@RequestMapping("/api/users")
+public class Controller {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/")
+    public List<User> getAllUser(){
+        return userService.getAllUsers();
+    }
+
+    @PostMapping("/bulk")
+    public Map<String, Object> addAllUser(@RequestBody List<User> users){
+        return userService.addAllUsers(users);
+    }
+}
+```
+
+---
+
+### 🧠 **Test JSON Example**
+
+**POST →** `http://localhost:8080/api/users/bulk`
+```json
+[
+  { "name": "Alice", "email": "alice@gmail.com", "department": "IT" },
+  { "name": "Bob", "email": "bob@gmail.com", "department": "Finance" },
+  { "name": "", "email": "invalid", "department": "HR" },
+  { "name": "Charlie", "email": "charlie@gmail.com", "department": null }
+]
+```
+
+**✅ Response Example**
+```json
+{
+  "saved": 2,
+  "failed": 2,
+  "users": [
+    { "id": 1, "name": "Alice", "email": "alice@gmail.com", "department": "IT" },
+    { "id": 2, "name": "Bob", "email": "bob@gmail.com", "department": "Finance" }
+  ]
 }
 ```
 
