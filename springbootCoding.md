@@ -1,12 +1,19 @@
 # Table of Contents
 
-- [Go to Student Management REST API](#student-management-rest-api)
-- [Go to To-Do Tracker with Status](#to-do-tracker-with-status)
-- [Banking Transaction API](#banking-transaction-api)
-- [Jump to Library Management (Book + Author)](#4-library-management-book--author)
-- [Batch Data API](#batch-data-api)
+- [Go to Student Management REST API](#student-management-rest-api)  
+  **Concepts & Skills Learned:** CRUD REST API, Validation (`@Valid`, `@NotBlank`, `@Email`), Exception Handling, Path Variables, Request Body, MySQL Configuration  
 
+- [Go to To-Do Tracker with Status](#to-do-tracker-with-status)  
+  **Concepts & Skills Learned:** Enums (`PENDING`, `DONE`), Query Filtering with `@RequestParam`, Custom JPA Methods (`findByStatus`)  
 
+- [Banking Transaction API](#banking-transaction-api)  
+  **Concepts & Skills Learned:** DTOs (Data Transfer Objects) for Request Bodies  
+
+- [Jump to Library Management (Book + Author)](#4-library-management-book--author)  
+  **Concepts & Skills Learned:** One-to-Many & Many-to-One Relationships, `@JoinColumn`, `mappedBy`, Bi-directional Entity Relationships  
+
+- [Batch Data API](#batch-data-api)  
+  **Concepts & Skills Learned:** Bulk Data Input (List of Objects), JSON Response using `Map<String, Object>`  
 
 ---
 ---
