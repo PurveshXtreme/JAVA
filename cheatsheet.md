@@ -75,3 +75,61 @@
 | Handle mixed input | ``` sc.nextLine(); // clear buffer ``` |
 
 ---
+---
+
+## 🔹 Java String — Cheatsheet (Operations & Syntax)
+
+| Function / Operation | Short Syntax |
+|--------------------|-------------|
+| Declare string | ``` String s = "Hello"; ``` |
+| Create using new | ``` String s = new String("Hello"); ``` |
+| String length | ``` s.length() ``` |
+| Access character | ``` s.charAt(i) ``` |
+| Concatenate | ``` s + "World" ``` or ``` s.concat("World") ``` |
+| Compare strings | ``` s.equals(t) ``` |
+| Compare (ignore case) | ``` s.equalsIgnoreCase(t) ``` |
+| Lexicographic compare | ``` s.compareTo(t) ``` |
+| Convert to uppercase | ``` s.toUpperCase() ``` |
+| Convert to lowercase | ``` s.toLowerCase() ``` |
+| Remove spaces (ends) | ``` s.trim() ``` |
+| Check contains | ``` s.contains("lo") ``` |
+| Check starts with | ``` s.startsWith("He") ``` |
+| Check ends with | ``` s.endsWith("lo") ``` |
+| Find index | ``` s.indexOf('l') ``` |
+| Find last index | ``` s.lastIndexOf('l') ``` |
+| Replace character | ``` s.replace('l','x') ``` |
+| Replace substring | ``` s.replace("ll","yy") ``` |
+| Substring | ``` s.substring(i, j) ``` |
+| Split string | ``` s.split(" ") ``` |
+| Convert to char array | ``` s.toCharArray() ``` |
+| Convert to string | ``` String.valueOf(x) ``` |
+| Check empty | ``` s.isEmpty() ``` |
+| Check blank | ``` s.isBlank() ``` |
+
+---
+
+## 🔹 Common String Patterns
+
+| Task | Short Syntax |
+|-----|-------------|
+| Reverse string | ``` new StringBuilder(s).reverse().toString() ``` |
+| Count characters | ``` s.length() ``` |
+| Remove all spaces | ``` s.replace(" ", "") ``` |
+| Check palindrome | ``` s.equals(new StringBuilder(s).reverse().toString()) ``` |
+| Convert int → string | ``` String.valueOf(x) ``` |
+| Convert string → int | ``` Integer.parseInt(s) ``` |
+| Iterate characters | ``` for(char c : s.toCharArray()) ``` |
+
+---
+
+## 🔹 String vs StringBuilder vs StringBuffer (Quick)
+
+| Feature | String | StringBuilder | StringBuffer |
+|------|-------|---------------|--------------|
+| Mutable | ❌ | ✅ | ✅ |
+| Thread-safe | ❌ | ❌ | ✅ |
+| Performance | Slow | Fast | Medium |
+| Use case | Fixed text | Frequent changes | Multithreading |
+
+---
+---
